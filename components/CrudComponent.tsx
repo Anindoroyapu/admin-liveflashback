@@ -53,6 +53,7 @@ const CrudComponent = <T extends AnyItem>({
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingItem(null);
+    setIsLoading(true);
   };
 
   const handleDelete = useCallback((id: string) => {
@@ -68,28 +69,24 @@ const CrudComponent = <T extends AnyItem>({
   const handleSubmit = useCallback(
     (formData: Omit<T, "id" | "createdAt">) => {
       setIsLoading(true);
-      setTimeout(() => {
-        if (editingItem) {
-          setItems((prev) =>
-            prev.map((item) =>
-              item.id === editingItem.id
-                ? { ...editingItem, ...formData }
-                : item
-            )
-          );
-        } else {
-          const newItem: T = {
-            id: Date.now().toString(),
-            createdAt: new Date().toISOString(),
-            ...formData,
-          } as T;
 
-          setItems((prev) => [newItem, ...prev]);
-        }
+      if (editingItem) {
+        setItems((prev) =>
+          prev.map((item) =>
+            item.id === editingItem.id ? { ...editingItem, ...formData } : item
+          )
+        );
+      } else {
+        const newItem: T = {
+          id: Date.now().toString(),
+          createdAt: new Date().toISOString(),
+          ...formData,
+        } as T;
 
-        setIsLoading(false);
-        handleCloseModal();
-      }, 1000);
+        setItems((prev) => [newItem, ...prev]);
+      }
+
+      setIsLoading(false);
     },
     [editingItem]
   );
@@ -111,7 +108,6 @@ const CrudComponent = <T extends AnyItem>({
 
       <Modal
         isOpen={isModalOpen}
-        onClose={handleCloseModal}
         title={editingItem ? `Edit ${itemType}` : `Add New ${itemType}`}
       >
         {renderForm(handleSubmit, handleCloseModal, loadingState, editingItem)}

@@ -10,14 +10,26 @@ const CheckoutForm: React.FC<{
   initialData?: Checkout | null;
 }> = ({ onSubmit, onCancel, isLoading, initialData }) => {
   const [formData, setFormData] = React.useState({
-    id: initialData?.id || "",
-    fullName: initialData?.fullName || "",
-    title: initialData?.title || "",
+    address: initialData?.address || "",
+    amount: initialData?.amount || 0,
     details: initialData?.details || "",
+    email: initialData?.email || "",
+    id: initialData?.id || "",
     note: initialData?.note || "",
     pMethod: initialData?.method || "Cash",
-    amount: initialData?.amount || 0,
-    status: initialData?.status || "Submitted",
+    title: initialData?.title || "",
+    fullName: initialData?.fullName || "",
+    phone: initialData?.phone || "",
+    productId: initialData?.productId || "",
+    productName: initialData?.productName || "",
+    productSku: initialData?.productSku || "",
+    quantity: initialData?.quantity || 0,
+    shipping: initialData?.shipping || "",
+    size: initialData?.size || "",
+    status: initialData?.status || "Pending",
+    subTotal: initialData?.subTotal || 0,
+    total: initialData?.total || 0,
+    updatedAt: initialData?.updatedAt || "",
   });
 
   const handleChange = (
@@ -39,13 +51,18 @@ const CheckoutForm: React.FC<{
 
       const payload: Record<string, any> = {
         fullName: formData.fullName,
-        amount: formData.amount,
-        method: formData.pMethod,
-        details: formData.details,
-        note: formData.note,
-        title: formData.title,
-        status: formData.status,
-        collection: "collection",
+        email: formData.email || " Anonymous",
+        phone: formData.phone,
+        address: formData.address,
+        size: formData.size,
+        subTotal: formData.subTotal.toString(),
+        total: formData.total.toString(),
+        shipping: formData.shipping.toString(),
+        quantity: formData.quantity.toString(),
+        productName: formData.productName,
+        productId: formData.productId,
+        productSku: formData.productSku,
+        status: "Pending",
       };
 
       if (formData.id) {
@@ -59,16 +76,22 @@ const CheckoutForm: React.FC<{
         },
         body: JSON.stringify(payload),
       });
+
+      if (res.ok) {
+        onCancel();
+      } else {
+        const text = await res.text().catch(() => "");
+        console.error("Request failed:", res.status, text);
+      }
     } catch (err) {
       console.error("POST Error:", err);
     }
-    onSubmit(formData);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block mb-1 font-medium"> Name</label>
+        <label className="block mb-1 font-medium">Name</label>
         <input
           type="text"
           name="fullName"
@@ -78,49 +101,151 @@ const CheckoutForm: React.FC<{
           required
         />
       </div>
+
       <div>
-        <label className="block mb-1 font-medium">Collection Reason</label>
+        <label className="block mb-1 font-medium">Address</label>
         <input
           type="text"
-          name="title"
-          value={formData.title}
+          name="address"
+          value={formData.address}
           onChange={handleChange}
           className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
           required
         />
       </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block mb-1 font-medium">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+            required
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">Phone</label>
+          <input
+            type="text"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+            required
+          />
+        </div>
+      </div>
+
       <div>
-        <label className="block mb-1 font-medium">Details</label>
+        <label className="block mb-1 font-medium">Product ID</label>
         <input
           type="text"
-          name="details"
-          value={formData.details}
+          name="productId"
+          value={formData.productId}
           onChange={handleChange}
           className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
-          required
         />
       </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block mb-1 font-medium">Product Name</label>
+          <input
+            type="text"
+            name="productName"
+            value={formData.productName}
+            onChange={handleChange}
+            className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">Product SKU</label>
+          <input
+            type="text"
+            name="productSku"
+            value={formData.productSku}
+            onChange={handleChange}
+            className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block mb-1 font-medium">Quantity</label>
+          <input
+            type="number"
+            name="quantity"
+            value={formData.quantity}
+            onChange={handleChange}
+            className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+            min={0}
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">Size</label>
+          <input
+            type="text"
+            name="size"
+            value={formData.size}
+            onChange={handleChange}
+            className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">Shipping</label>
+          <input
+            type="text"
+            name="shipping"
+            value={formData.shipping}
+            onChange={handleChange}
+            className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block mb-1 font-medium">Sub Total</label>
+          <input
+            type="number"
+            name="subTotal"
+            value={formData.subTotal}
+            onChange={handleChange}
+            className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+            min={0}
+            step="0.01"
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">Total</label>
+          <input
+            type="number"
+            name="total"
+            value={formData.total}
+            onChange={handleChange}
+            className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+            min={0}
+            step="0.01"
+          />
+        </div>
+      </div>
+
       <div>
-        <label className="block mb-1 font-medium">Amount</label>
-        <input
-          type="number"
-          name="amount"
-          value={formData.amount}
+        <label className="block mb-1 font-medium">Status</label>
+        <select
+          name="status"
+          value={formData.status}
           onChange={handleChange}
           className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
-          required
-        />
-      </div>{" "}
-      <div>
-        <label className="block mb-1 font-medium">Note</label>
-        <input
-          type="text"
-          name="note"
-          value={formData.note}
-          onChange={handleChange}
-          className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
-          required
-        />
+        >
+          <option value="Pending">Pending</option>
+          <option value="Paid">Paid</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
       </div>
       {/* <div>
         <label className="block mb-1 font-medium">Payment Method</label>
@@ -151,14 +276,20 @@ const CheckoutTable: React.FC<{
     <table className="w-full text-left">
       <thead>
         <tr className="border-b dark:border-gray-700">
+          <th className="p-3">ID</th>
           <th className="p-3">Name</th>
-          <th className="p-3">Title</th>
-          <th className="p-3">Details</th>
-          <th className="p-3">Note</th>
+          <th className="p-3">Address</th>
 
-          <th className="p-3">Amount</th>
-          <th className="p-3">Payment Method</th>
-          <th className="p-3">Actions</th>
+          <th className="p-3">Contact</th>
+          <th className="p-3">Product</th>
+          <th className="p-3">SKU</th>
+
+          <th className="p-3">Quantity</th>
+          <th className="p-3">Size</th>
+          <th className="p-3">Shipping</th>
+          <th className="p-3">Total</th>
+          <th className="p-3">Status</th>
+          <th className="p-3">#</th>
         </tr>
       </thead>
       <tbody>
@@ -167,20 +298,30 @@ const CheckoutTable: React.FC<{
           .reverse()
           .map((item) => (
             <tr key={item.id} className="border-b dark:border-gray-700">
+              <td className="p-3">{item.id}</td>
               <td className="p-3">{item.fullName}</td>
-              <td className="p-3">{item.title}</td>
-              <td className="p-3">{item.details}</td>
-              <td className="p-3">{item.note}</td>
-              <td className="p-3">{item.amount}</td>
-              <td className="p-3">{item.method}</td>
+              <td className="p-3">{item.address}</td>
+
+              <td className="p-3">
+                {item.Phone} <br /> {item.email}
+              </td>
+              <td className="p-3">{item.productName}</td>
+              <td className="p-3">{item.productSku}</td>
+
+              <td className="p-3">{item.quantity}</td>
+
+              <td className="p-3">{item.size}</td>
+              <td className="p-3">{item.shipping}</td>
+              <td className="p-3">{item.total}</td>
+              <td className="p-3">{item.status}</td>
               <td className="p-3">
                 <div className="flex gap-2">
                   <Button variant="secondary" onClick={() => onEdit(item)}>
                     Edit
                   </Button>
-                  <Button variant="danger" onClick={() => onDelete(item.id)}>
+                  {/* <Button variant="danger" onClick={() => onDelete(item.id)}>
                     Delete
-                  </Button>
+                  </Button> */}
                 </div>
               </td>
             </tr>
