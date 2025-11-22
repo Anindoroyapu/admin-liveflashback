@@ -9,7 +9,7 @@ import CollectionPage from "./pages/CollectionPage";
 import ExpenditurePage from "./pages/ExpenditurePage";
 import OtherPage from "./pages/OtherPage";
 import SettingsPage from "./pages/SettingsPage";
-import OrderPage from "./pages/OrderPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 const ProtectedRoute: React.FC = () => {
   const { isLoggedIn } = useAuth();
@@ -35,7 +35,7 @@ const App: React.FC = () => {
           />
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<DashboardPage />} />
-            <Route path="/order" element={<OrderPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/collection" element={<CollectionPage />} />
             <Route path="/expenditure" element={<ExpenditurePage />} />

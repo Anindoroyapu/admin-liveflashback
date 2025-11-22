@@ -58,7 +58,6 @@ export type AnyItem =
   | Expenditure
   | Other;
 export interface Checkout extends BaseItem {
-  id: string;
   address: string;
   email: string;
   fullName: string;
@@ -72,6 +71,5 @@ export interface Checkout extends BaseItem {
   status: string;
   subTotal: string | number;
   total: string | number;
-  createdAt: string;
   updatedAt: string;
 }
