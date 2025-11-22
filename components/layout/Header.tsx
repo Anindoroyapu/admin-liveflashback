@@ -37,7 +37,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
               </span>
             </span>
           </button>
-          <h1 className="text-xl font-semibold">Asha LensCraft</h1>
+          <h1 className="text-xl font-semibold">Live Flashback</h1>
         </div>
 
         <div className="hidden lg:block">
@@ -46,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
 
         <div className="flex items-center gap-4">
           <div className="relative">
-            <span className="font-medium">Welcome, Anindo</span>
+            <span className="font-medium">Welcome</span>
             {/* Placeholder for user dropdown */}
           </div>
         </div>

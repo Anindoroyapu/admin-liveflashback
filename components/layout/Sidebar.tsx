@@ -20,12 +20,9 @@ interface SidebarProps {
 
 const menuItems = [
   { path: "/", icon: <DashboardIcon />, label: "Dashboard" },
-  { path: "/booking", icon: <BookingIcon />, label: "Booking" },
   { path: "/contact", icon: <ContactIcon />, label: "Contact" },
-  // { path: "/photo-list", icon: <PhotoListIcon />, label: "Photo List" },
   { path: "/collection", icon: <CollectionIcon />, label: "Collection" },
   { path: "/expenditure", icon: <ExpenditureIcon />, label: "Expenditure" },
-  // { path: "/other", icon: <OtherIcon />, label: "Other" },
   { path: "/settings", icon: <SettingsIcon />, label: "Settings" },
 ];
 
@@ -40,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
     >
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/" className="text-2xl font-bold text-white pt-2.5">
-          Asha LensCraft
+          Live Flashback
         </NavLink>
         <button
           onClick={() => setSidebarOpen(false)}

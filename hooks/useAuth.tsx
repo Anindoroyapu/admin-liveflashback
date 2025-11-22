@@ -24,7 +24,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const login = useCallback(
     async (user: string, pass: string): Promise<boolean> => {
       // Static credentials
-      if (user === "anindoroy112@gmail.com" && pass === "123456") {
+      if (user === "liveflashback90@gmail.com" && pass === "admin") {
         await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate API call
         localStorage.setItem("isLoggedIn", "true");
         setIsLoggedIn(true);
