@@ -352,7 +352,7 @@ const CheckoutPage: React.FC = () => {
       const json = await res.json();
       setCheckoutList(json?.data ?? []);
     } catch (err: any) {
-      if (err?.name === "AbortError") return; // fetch was aborted, ignore
+      if (err?.name === "AbortError") return;
       console.error("Error fetching data:", err);
     } finally {
       setIsLoading(false);

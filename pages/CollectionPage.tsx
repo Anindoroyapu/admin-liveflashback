@@ -8,7 +8,8 @@ const CollectionForm: React.FC<{
   onCancel: () => void;
   isLoading: boolean;
   initialData?: Collection | null;
-}> = ({ onSubmit, onCancel, isLoading, initialData }) => {
+  reload: () => void;
+}> = ({ onSubmit, onCancel, isLoading, initialData, reload }) => {
   const [formData, setFormData] = React.useState({
     id: initialData?.id || "",
     fullName: initialData?.fullName || "",
@@ -59,10 +60,16 @@ const CollectionForm: React.FC<{
         },
         body: JSON.stringify(payload),
       });
+      if (res.ok) {
+        onCancel();
+        reload();
+      } else {
+        const text = await res.text().catch(() => "");
+        console.error("Request failed:", res.status, text);
+      }
     } catch (err) {
       console.error("POST Error:", err);
     }
-    onSubmit(formData);
   };
 
   return (
@@ -193,14 +200,22 @@ const CollectionTable: React.FC<{
 const CollectionPage: React.FC = () => {
   const [collectionList, setCollectionList] = React.useState<Collection[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [reloadKey, setReloadKey] = React.useState(0);
 
   React.useEffect(() => {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
+  const fetchData = React.useCallback(async (signal?: AbortSignal) => {
+    setIsLoading(true);
     try {
-      const res = await fetch("https://admin.ashaa.xyz/api/Collection");
+      const res = await fetch("https://admin.ashaa.xyz/api/Collection", {
+        signal,
+      });
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(`Fetch error ${res.status}: ${text}`);
+      }
       const json = await res.json();
       setCollectionList(json || []);
     } catch (error) {
@@ -208,7 +223,16 @@ const CollectionPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  React.useEffect(() => {
+    const controller = new AbortController();
+    fetchData(controller.signal);
+    return () => controller.abort();
+  }, [fetchData, reloadKey]);
+
+  const reload = () => setReloadKey((k) => k + 1);
+
   return (
     <CrudComponent<Collection>
       title="Manage Collections"
@@ -223,6 +247,7 @@ const CollectionPage: React.FC = () => {
           onCancel={onCancel}
           isLoading={isLoading}
           initialData={initialData}
+          reload={reload}
         />
       )}
     />
