@@ -185,9 +185,9 @@ const CollectionTable: React.FC<{
                   <Button variant="secondary" onClick={() => onEdit(item)}>
                     Edit
                   </Button>
-                  <Button variant="danger" onClick={() => onDelete(item.id)}>
+                  {/* <Button variant="danger" onClick={() => onDelete(item.id)}>
                     Delete
-                  </Button>
+                  </Button> */}
                 </div>
               </td>
             </tr>

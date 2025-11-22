@@ -4,9 +4,10 @@ interface ModalProps {
   isOpen: boolean;
   title: string;
   children: React.ReactNode;
+  onClose: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, title, children }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, title, children, onClose }) => {
   if (!isOpen) return null;
 
   return (
@@ -21,7 +22,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, title, children }) => {
         <div className="flex justify-between items-center p-5 border-b border-gray-200 dark:border-gray-700">
           <h3 className="text-xl font-semibold">{title}</h3>
           <button
-            // onClick={onClose}
+            onClick={onClose}
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
           >
             <svg

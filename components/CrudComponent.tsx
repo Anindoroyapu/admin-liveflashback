@@ -108,6 +108,7 @@ const CrudComponent = <T extends AnyItem>({
 
       <Modal
         isOpen={isModalOpen}
+        onClose={handleCloseModal}
         title={editingItem ? `Edit ${itemType}` : `Add New ${itemType}`}
       >
         {renderForm(handleSubmit, handleCloseModal, loadingState, editingItem)}
