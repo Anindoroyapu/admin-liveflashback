@@ -8,7 +8,8 @@ const ContactForm: React.FC<{
   onCancel: () => void;
   isLoading: boolean;
   initialData?: Contact | null;
-}> = ({ onSubmit, onCancel, isLoading, initialData }) => {
+  reload: () => void;
+}> = ({ onSubmit, onCancel, isLoading, initialData, reload }) => {
   const [formData, setFormData] = React.useState({
     id: initialData?.id || "",
     fullName: initialData?.fullName || "",
@@ -51,10 +52,16 @@ const ContactForm: React.FC<{
         },
         body: JSON.stringify(payload),
       });
+      if (res.ok) {
+        onCancel();
+        reload();
+      } else {
+        const text = await res.text().catch(() => "");
+        console.error("Request failed:", res.status, text);
+      }
     } catch (err) {
       console.error("POST Error:", err);
     }
-    onSubmit(formData);
   };
 
   return (
@@ -157,9 +164,9 @@ const ContactTable: React.FC<{
                   <Button variant="secondary" onClick={() => onEdit(item)}>
                     Edit
                   </Button>
-                  <Button variant="danger" onClick={() => onDelete(item.id)}>
+                  {/* <Button variant="danger" onClick={() => onDelete(item.id)}>
                     Delete
-                  </Button>
+                  </Button> */}
                 </div>
               </td>
             </tr>
@@ -172,14 +179,22 @@ const ContactTable: React.FC<{
 const ContactPage: React.FC = () => {
   const [contactList, setContactList] = React.useState<Contact[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [reloadKey, setReloadKey] = React.useState(0);
 
   React.useEffect(() => {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
+  const fetchData = React.useCallback(async (signal?: AbortSignal) => {
+    setIsLoading(true);
     try {
-      const res = await fetch("https://admin.ashaa.xyz/api/Contact");
+      const res = await fetch("https://admin.ashaa.xyz/api/Contact", {
+        signal,
+      });
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(`Fetch error ${res.status}: ${text}`);
+      }
       const json = await res.json();
       setContactList(json || []);
     } catch (error) {
@@ -187,7 +202,16 @@ const ContactPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  React.useEffect(() => {
+    const controller = new AbortController();
+    fetchData(controller.signal);
+    return () => controller.abort();
+  }, [fetchData, reloadKey]);
+
+  const reload = () => setReloadKey((k) => k + 1);
+
   return (
     <CrudComponent<Contact>
       title="Manage Contacts"
@@ -202,6 +226,7 @@ const ContactPage: React.FC = () => {
           onCancel={onCancel}
           isLoading={isLoading}
           initialData={initialData}
+          reload={reload}
         />
       )}
     />

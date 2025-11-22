@@ -53,7 +53,6 @@ const CrudComponent = <T extends AnyItem>({
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingItem(null);
-    setIsLoading(true);
   };
 
   const handleDelete = useCallback((id: string) => {
@@ -68,8 +67,6 @@ const CrudComponent = <T extends AnyItem>({
 
   const handleSubmit = useCallback(
     (formData: Omit<T, "id" | "createdAt">) => {
-      setIsLoading(true);
-
       if (editingItem) {
         setItems((prev) =>
           prev.map((item) =>
@@ -85,8 +82,6 @@ const CrudComponent = <T extends AnyItem>({
 
         setItems((prev) => [newItem, ...prev]);
       }
-
-      setIsLoading(false);
     },
     [editingItem]
   );
