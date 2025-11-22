@@ -5,7 +5,6 @@ import MainLayout from "./components/layout/MainLayout";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import ContactPage from "./pages/ContactPage";
-import PhotoListPage from "./pages/PhotoListPage";
 import CollectionPage from "./pages/CollectionPage";
 import ExpenditurePage from "./pages/ExpenditurePage";
 import OtherPage from "./pages/OtherPage";

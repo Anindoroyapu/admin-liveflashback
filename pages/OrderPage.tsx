@@ -1,23 +1,34 @@
 import React from "react";
-import type { Order } from "../types";
+import type { Checkout } from "../types";
 import Button from "../components/ui/Button";
 import CrudComponent from "../components/CrudComponent";
 
-const OrderForm: React.FC<{
-  onSubmit: (data: Omit<Order, "id" | "createdAt">) => void;
+const CheckoutForm: React.FC<{
+  onSubmit: (data: Omit<Checkout, "id" | "createdAt">) => void;
   onCancel: () => void;
   isLoading: boolean;
-  initialData?: Order | null;
+  initialData?: Checkout | null;
 }> = ({ onSubmit, onCancel, isLoading, initialData }) => {
   const [formData, setFormData] = React.useState({
-    id: initialData?.id || "",
-    fullName: initialData?.fullName || "",
-    title: initialData?.title || "",
-    details: initialData?.details || "",
-    note: initialData?.note || "",
-    pMethod: initialData?.method || "Cash",
+    address: initialData?.address || "",
     amount: initialData?.amount || 0,
-    status: initialData?.status || "Submitted",
+    createdAt: initialData?.createdAt || "",
+    email: initialData?.email || "",
+    id: initialData?.id || "",
+    method: initialData?.method || "Cash",
+    fullName: initialData?.fullName || "",
+    note: initialData?.note || "",
+    phone: initialData?.phone || "",
+    productId: initialData?.productId || "",
+    productName: initialData?.productName || "",
+    productSku: initialData?.productSku || "",
+    quantity: initialData?.quantity || 0,
+    shipping: initialData?.shipping || 0,
+    size: initialData?.size || "",
+    status: initialData?.status || "",
+    subTotal: initialData?.subTotal || 0,
+    total: initialData?.total || 0,
+    updatedAt: initialData?.updatedAt || "",
   });
 
   const handleChange = (
@@ -33,19 +44,26 @@ const OrderForm: React.FC<{
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      const endpointBase = "https://admin.ashaa.xyz/api/Order";
+      const endpointBase = "https://admin.ashaa.xyz/api/Checkout";
       const url = formData.id ? `${endpointBase}/${formData.id}` : endpointBase;
       const method = formData.id ? "PUT" : "POST";
 
       const payload: Record<string, any> = {
         fullName: formData.fullName,
-        amount: formData.amount,
-        method: formData.pMethod,
-        details: formData.details,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        productId: formData.productId,
+        productName: formData.productName,
+        productSku: formData.productSku,
+        quantity: formData.quantity,
+        size: formData.size,
+        subTotal: formData.subTotal,
+        shipping: formData.shipping,
+        total: formData.total,
+        method: formData.method,
         note: formData.note,
-        title: formData.title,
         status: formData.status,
-        Order: "Order",
       };
 
       if (formData.id) {
@@ -74,18 +92,18 @@ const OrderForm: React.FC<{
           name="fullName"
           value={formData.fullName}
           onChange={handleChange}
-          className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+          className="w-full p-2 bCheckout rounded bg-gray-50 dark:bg-gray-700 dark:bCheckout-gray-600"
           required
         />
       </div>
       <div>
-        <label className="block mb-1 font-medium">Order Reason</label>
+        <label className="block mb-1 font-medium">Checkout Reason</label>
         <input
           type="text"
           name="title"
           value={formData.title}
           onChange={handleChange}
-          className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+          className="w-full p-2 bCheckout rounded bg-gray-50 dark:bg-gray-700 dark:bCheckout-gray-600"
           required
         />
       </div>
@@ -96,7 +114,7 @@ const OrderForm: React.FC<{
           name="details"
           value={formData.details}
           onChange={handleChange}
-          className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+          className="w-full p-2 bCheckout rounded bg-gray-50 dark:bg-gray-700 dark:bCheckout-gray-600"
           required
         />
       </div>
@@ -107,7 +125,7 @@ const OrderForm: React.FC<{
           name="amount"
           value={formData.amount}
           onChange={handleChange}
-          className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+          className="w-full p-2 bCheckout rounded bg-gray-50 dark:bg-gray-700 dark:bCheckout-gray-600"
           required
         />
       </div>{" "}
@@ -118,13 +136,13 @@ const OrderForm: React.FC<{
           name="note"
           value={formData.note}
           onChange={handleChange}
-          className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+          className="w-full p-2 bCheckout rounded bg-gray-50 dark:bg-gray-700 dark:bCheckout-gray-600"
           required
         />
       </div>
       {/* <div>
         <label className="block mb-1 font-medium">Payment Method</label>
-        <select name="pMethod" value={formData.pMethod} onChange={handleChange} className="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+        <select name="pMethod" value={formData.pMethod} onChange={handleChange} className="w-full p-2 bCheckout rounded bg-gray-50 dark:bg-gray-700 dark:bCheckout-gray-600">
           <option value="Cash">Cash</option>
           <option value="Card">Card</option>
           <option value="Online">Online</option>
@@ -142,20 +160,19 @@ const OrderForm: React.FC<{
   );
 };
 
-const OrderTable: React.FC<{
-  items: Order[];
-  onEdit: (item: Order) => void;
+const CheckoutTable: React.FC<{
+  items: Checkout[];
+  onEdit: (item: Checkout) => void;
   onDelete: (id: string) => void;
 }> = ({ items, onEdit, onDelete }) => (
   <div className="overflow-x-auto">
     <table className="w-full text-left">
       <thead>
-        <tr className="border-b dark:border-gray-700">
+        <tr className="bCheckout-b dark:bCheckout-gray-700">
           <th className="p-3">Name</th>
           <th className="p-3">Title</th>
           <th className="p-3">Details</th>
           <th className="p-3">Note</th>
-
           <th className="p-3">Amount</th>
           <th className="p-3">Payment Method</th>
           <th className="p-3">Actions</th>
@@ -166,7 +183,7 @@ const OrderTable: React.FC<{
           .slice()
           .reverse()
           .map((item) => (
-            <tr key={item.id} className="border-b dark:border-gray-700">
+            <tr key={item.id} className="bCheckout-b dark:bCheckout-gray-700">
               <td className="p-3">{item.fullName}</td>
               <td className="p-3">{item.title}</td>
               <td className="p-3">{item.details}</td>
@@ -191,8 +208,8 @@ const OrderTable: React.FC<{
 );
 
 const OrderPage: React.FC = () => {
-  const [OrderList, setOrderList] = React.useState<Order[]>([]);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [CheckoutList, setCheckoutList] = React.useState<Checkout[]>([]);
+  const [loading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     fetchData();
@@ -200,25 +217,28 @@ const OrderPage: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch("https://admin.ashaa.xyz/api/Order");
+      const res = await fetch("https://admin.ashaa.xyz/api/Checkout");
       const json = await res.json();
-      setOrderList(json || []);
+      setCheckoutList(json.data || []);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  console.log(CheckoutList, "CheckoutList");
+
   return (
-    <CrudComponent<Order>
-      title="Manage Orders"
-      itemType="Order"
-      initialItems={OrderList}
+    <CrudComponent<Checkout>
+      title="Manage Checkouts"
+      itemType="Checkout"
+      initialItems={CheckoutList}
       renderTable={(items, onEdit, onDelete) => (
-        <OrderTable items={items} onEdit={onEdit} onDelete={onDelete} />
+        <CheckoutTable items={items} onEdit={onEdit} onDelete={onDelete} />
       )}
       renderForm={(onSubmit, onCancel, isLoading, initialData) => (
-        <OrderForm
+        <CheckoutForm
           onSubmit={onSubmit}
           onCancel={onCancel}
           isLoading={isLoading}

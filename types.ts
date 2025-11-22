@@ -51,14 +51,27 @@ export interface Other extends BaseItem {
 
 export type AnyItem =
   | Booking
+  | Checkout
   | Contact
   | Photo
   | Collection
   | Expenditure
   | Other;
-
-export interface Order extends BaseItem {
+export interface Checkout extends BaseItem {
+  id: string;
+  address: string;
   email: string;
+  fullName: string;
   phone: string;
-  message: string;
+  productId: string;
+  productName: string;
+  productSku: string;
+  quantity: string | number;
+  shipping: string | number;
+  size: string;
+  status: string;
+  subTotal: string | number;
+  total: string | number;
+  createdAt: string;
+  updatedAt: string;
 }
