@@ -21,6 +21,7 @@ interface SidebarProps {
 const menuItems = [
   { path: "/", icon: <DashboardIcon />, label: "Dashboard" },
   { path: "/checkout", icon: <BookingIcon />, label: "Order List" },
+  { path: "/product", icon: <PhotoListIcon />, label: "Product List" },
   { path: "/contact", icon: <ContactIcon />, label: "Contact" },
   { path: "/collection", icon: <CollectionIcon />, label: "Collection" },
   { path: "/expenditure", icon: <ExpenditureIcon />, label: "Expenditure" },
