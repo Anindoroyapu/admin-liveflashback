@@ -56,3 +56,9 @@ export type AnyItem =
   | Collection
   | Expenditure
   | Other;
+
+export interface Order extends BaseItem {
+  email: string;
+  phone: string;
+  message: string;
+}
