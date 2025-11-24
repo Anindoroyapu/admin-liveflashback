@@ -65,7 +65,7 @@ const OrderListTable: FC<Props> = ({ order, status, btncolor }) => {
   };
 
   return (
-    <>
+  
       <tr className="border-b text-sm border-slate-200 last:border-b-0 hover:bg-slate-50">
         <td className="p-4 text-slate-700 font-medium">{order.id}</td>
         <td className="p-4 text-slate-700">{order.fullName}</td>
@@ -79,7 +79,6 @@ const OrderListTable: FC<Props> = ({ order, status, btncolor }) => {
         <td className="p-4 text-slate-700 text-center">{order.size}</td>
         <td className="p-4 text-slate-700 text-center">{order.shipping}</td>
         <td className="p-4 text-slate-700">{order.total}</td>
-
         {/* status column: show current status (e.g., "pending") */}
         <td className="p-4 text-slate-700 text-center">
           <span className="inline-block px-2 py-1 rounded text-sm bg-slate-100">
@@ -108,9 +107,7 @@ const OrderListTable: FC<Props> = ({ order, status, btncolor }) => {
             {hasNext ? `To be ${nextStatus}` : "No next status"}
           </button>
         </td>
-      </tr>
-
-      {/* Confirm modal */}
+        {/* Confirm modal */}
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
@@ -165,7 +162,10 @@ const OrderListTable: FC<Props> = ({ order, status, btncolor }) => {
           </div>
         </div>
       )}
-    </>
+      </tr>
+
+      
+   
   );
 };
 

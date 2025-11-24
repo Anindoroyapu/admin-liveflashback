@@ -11,6 +11,7 @@ import OtherPage from "./pages/OtherPage";
 import SettingsPage from "./pages/SettingsPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ProductPage from "./pages/ProductPage";
+import OrderListProvider from "./pages/checkout/context/OrderListProvider";
 
 const ProtectedRoute: React.FC = () => {
   const { isLoggedIn } = useAuth();
@@ -36,7 +37,12 @@ const App: React.FC = () => {
           />
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<DashboardPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/checkout" element={
+              <OrderListProvider>
+              <CheckoutPage />
+              </OrderListProvider>
+              
+              } />
             <Route path="/product" element={<ProductPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/collection" element={<CollectionPage />} />

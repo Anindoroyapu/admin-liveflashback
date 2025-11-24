@@ -4,20 +4,6 @@ import OrderListTableHeaderSection from "./OrderListTableHeaderSection";
 import OrderProgressBarSection from "./OrderProgressBarSection";
 import { Checkout } from "@/types";
 
-type Order = {
-  id: string | number;
-  fullName: string;
-  phone: string;
-  email: string;
-  address: string;
-  productName: string;
-  quantity: number;
-  size?: string | number;
-  shipping?: string;
-  total: number | string;
-  createdAt: string | number;
-  status?: string;
-};
 
 
 const statuses = [
@@ -118,10 +104,9 @@ const OrderTabsSection: React.FC<{item:Checkout}> = ({item}) => {
       {statuses.map((s) => {
         const isActive = s.id === active;
 
-        // Filter orders to match the tab label (case/space-insensitive)
-        const filtered = item.filter(
-          (o) => normalize(o.status) === normalize(s.label)
-        );
+        // const filtered = item.filter(
+        //   (o) => normalize(o.status) === normalize(s.label)
+        // );
 
         return (
           <section
@@ -142,8 +127,8 @@ const OrderTabsSection: React.FC<{item:Checkout}> = ({item}) => {
                     <OrderListTableHeaderSection />
                   </thead>
                   <tbody>
-                    {filtered.length > 0 ? (
-                      filtered
+                    {item?.length > 0 ? (
+                      item
                         .slice()
                         .reverse()
                         .map((order) => (
